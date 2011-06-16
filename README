@@ -1,0 +1,5 @@
+make lex
+make yacc
+make
+
+./parser < test.c
