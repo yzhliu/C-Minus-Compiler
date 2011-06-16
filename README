@@ -1,3 +1,4 @@
+Compile:
 make lex
 make yacc
 make
