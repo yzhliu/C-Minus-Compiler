@@ -5,6 +5,7 @@
 #include "node.h"
 #include "hash.h"
 #include "var.h"
+#include "command.h"
 
 Node *tmp;
 
@@ -13,7 +14,7 @@ Node *opr(int name, int num, ...);
 Node *set_index(int value);
 Node *set_content(int value);
 void freeNode(Node *p);
-int exeNode(Node *p);
+int exeNode(Node *p, int signal);
 
 int yylexeNode(void);
 void yyerror(char *s);
@@ -43,7 +44,7 @@ void yyerror(char *s);
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%token PARAM FUNC VAR CALL
+%token PARAM FUNC VAR CALL GLOBAL_VAR
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -61,7 +62,7 @@ void yyerror(char *s);
 %%
 
 program
-    : declaration_list { exeNode($1); }
+    : declaration_list { exeNode($1, 0); freeNode($1); }
     ;
 
 declaration_list
@@ -70,7 +71,11 @@ declaration_list
     ;
 
 declaration
-    : var_declaration { $$ = $1; }
+    : var_declaration 
+        { 
+            $$  = opr(GLOBAL_VAR, 1, $1);
+            /*$$ = $1; */
+        }
     | fun_declaration { $$ = $1; }
     ;
 
@@ -297,7 +302,8 @@ Node *set_content(int value)
 	return p;
 }
 
-Node *set_index(int value) {
+Node *set_index(int value) 
+{
 	Node *p;
 	size_t sizeNode;
 	/* 分配结点空间 */
@@ -342,18 +348,21 @@ void freeNode(Node *p)
 	if (!p) return;
 	if (p->type == TYPE_OP) {
 		for (i = 0; i < p->op.num; i++)
-		freeNode(p->op.node[i]);
+            freeNode(p->op.node[i]);
 	}
 	free (p);
 }
-void yyerror(char *s) {
+
+void yyerror(char *s) 
+{
    printf("%s\n", s);
 }
 
 int main() 
 {
 
-    hash_init(var_local, HASHSIZE);
+    /*hash_init(var_local, HASHSIZE);*/
+
     yyparse();
 
     return 0;

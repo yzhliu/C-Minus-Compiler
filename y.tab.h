@@ -106,7 +106,8 @@
      FUNC = 322,
      VAR = 323,
      CALL = 324,
-     LOWER_THAN_ELSE = 325
+     GLOBAL_VAR = 325,
+     LOWER_THAN_ELSE = 326
    };
 #endif
 /* Tokens.  */
@@ -177,7 +178,8 @@
 #define FUNC 322
 #define VAR 323
 #define CALL 324
-#define LOWER_THAN_ELSE 325
+#define GLOBAL_VAR 325
+#define LOWER_THAN_ELSE 326
 
 
 
@@ -187,7 +189,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 25 "c-grammar.y"
+#line 26 "c-grammar.y"
 
     int iValue;
     int sIndex;
@@ -196,7 +198,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 200 "y.tab.h"
+#line 202 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

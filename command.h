@@ -9,11 +9,13 @@
 #define JMP "jmp"
 #define PUSH "push"
 #define POP "pop"
+#define ADD "add"
 #define SUB "sub"
 #define IMUL "imul"
 #define IDIV "idiv"
 #define LEA "lea"
 #define LEAVE "leave"
+#define RET "ret"
 #define SAR "sar"
 #define CMP "cmp"
 #define SETE "sete"
@@ -23,6 +25,7 @@
 #define SETGE "setge"
 #define SETLE "setle"
 #define MOVZX "movzx"
+#define CALLF "call"
 
 #define EAX "eax"
 #define EBX "ebx"
@@ -32,90 +35,47 @@
 #define ESP "esp"
 #define AL "al"
 
-#define MAX_STR_LENGHT 200
+#define VARSIZE "dword"
+#define GLOBAL_VAR_LENGTH 2
+#define GLOBAL_VAR_DEFINE "resw"
+#define VARSTR_LENGTH 20 /* for [ebp-4] ... */
+#define REGSTR_LENGTH 4 
 
-#define HASHSIZE 100
-#define HASHEMPTY -1
+#define MAX_STR_LENGTH 300
 
-#define STACKSIZE 100
+#define FUNC_PRE "F_"
+#define GDATA_PRE "D_"
 
-#define MARK_NONE -1
-#define MARK_FUNC 0
-#define MARK_IF 1
-#define MARK_ELSE 2
-#define MARK_WHILE 3
-#define MARK_VAR_DEC 4
-
-typedef struct treenode
-{
-    char *text;
-    int mark;
-    struct treenode *next;
-    struct treenode *child;
-} yytree;
-
-/* 定义树结点的权举类型 */
-typedef enum { TYPE_CONTENT, TYPE_INDEX, TYPE_OP } NodeEnum;
-/* 操作符 */
-typedef struct {
-    int name; /* 操作符名称 */
-    int num; /* 操作元个数 */
-    struct NodeTag * node[1]; /* 操作元地址 可扩展 */
-} OpNode;
-
-typedef struct NodeTag {
-    NodeEnum type; /* 树结点类型 */
-    /* Union 必须是最后一个成员 */
-    union {
-        int content; /* 内容 */
-        int index; /* 索引 */
-        OpNode op; /* 操作符对象 */
-    };
-} Node;
-extern int Var[26];
-
-FILE *block_fp;
-int labelno;
-int code_block_no;
-char strbucket[MAX_STR_LENGHT];
+char strbucket[MAX_STR_LENGTH];
 //char var_type_str[5][5] = { "", "byte", "word", "", "dword" };
-char var_type_str[5][5];
-
-int variable_bucket_hash[HASHSIZE];
-int variable_bucket_offset[HASHSIZE];
-int variable_bucket_size[HASHSIZE];
-int last_v_hash_offset;
-int var_no_in_list;
-
-int stack_comp[STACKSIZE];
-int stack_tail;
-
-void stack_comp_init();
-int pop_comp();
-int push_comp(int value);
 
 void output(const char *str);
-void creatlabel();
-void generate_var_offset(char *type);
-void insert_variable_into_hash(char *var);
-int lookup_var_offset(const char *var);
-int generate_varname_on_stack(char *retname, const char *name);
-int generate_varsize_on_stack(const char *name);
-
-void code_op_assign(const char *target, const char *source);
-void code_op_or(const char *v1, const char *v2);
-void code_start_func();
-void code_end_func();
-void code_start_all();
-void code_end_all();
-void code_output();
-
-unsigned int ELFHash(const char* str, unsigned int len);
-int hash_loopup(int *hashtable, int hashsize, int hash);
-void hash_init(int *hashtable, int hashsize);
-void hash_insert(int *hashtable, int *last, int hash);
-
-void addnext(yytree *source, yytree *node);
-void addchild(yytree *parent, yytree *child);
+static int func_is_main(int funcname);
+static void getvarstr(char *varstr, int offset);
+static void getregstr(char *regstr, int reg);
+int creat_label();
+void code_label(int labelno);
+void code_jmp(int labelno);
+void code_pop(int reg);
+void code_lea_global(int target, int addr, int offset);
+void code_lea_local(int target, int var);
+void code_move_reg(int target, int source);
+void code_push_mem(int addr, int offset);
+void code_push_reg(int reg, int mem);
+void code_push_ind(int idx);
+void code_push_cons(int constant);
+void code_push_global_var(int var, int offset);
+void code_call_func(int funcname);
+void code_start_bss();
+void code_start_text();
+void code_declare_global_var(int varname, int size);
+void code_start_func(int funcname);
+void code_clean_stack(int height);
+void code_end_func(int funcname);
+void code_sub_esp(int size);
+void code_test_condition(int reg, int test, int labelno);
+void code_op_assign(int target, int source);
+int code_get_array_offset(int baseoff, int idxreg, int varlength);
+int code_op_binary(int v1, int v2, char *op);
 
 #endif
