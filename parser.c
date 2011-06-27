@@ -32,6 +32,7 @@ int exeNode(Node *p, int signal)
     case TYPE_INDEX:   
         node = hash_lookup(var_local, HASHSIZE, p->index);
         if (node == NULL) {
+            //printf("globalxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
             /* it should be the global var */
             if (signal) { /* as right operand */
                 s_or_a = hash_lookup(var_global_SorA, HASHSIZE, p->index);
@@ -46,14 +47,21 @@ int exeNode(Node *p, int signal)
             //printf("load(index) %d\n", p->index); 
         } else {  /* local */
             if (signal) { /* as right operand */ 
+                code_push_ind(node->data);
+                /*
                 s_or_a = hash_lookup(var_local_SorA, HASHSIZE, p->index);
+                g_or_p = hash_lookup(var_local_GorP, HASHSIZE, p->index);
                 if (s_or_a->data == SCALAR) {
                     code_push_ind(node->data);
-                } else { /* array */
-                    /* store the addr of the array in eax and then push */
-                    code_lea_local(1, node->data);
+                } else { //array 
+                    if (g_or_p == GENERAL) {
+                        //store the addr of the array in eax and then push
+                        code_lea_local(1, node->data);
+                    } else {  //parameter 
+                    }
                     code_push_reg(1, 0); 
                 }
+                */
             } else { /* as left operand */
                 code_lea_local(2, node->data);
             }
@@ -122,9 +130,9 @@ int exeNode(Node *p, int signal)
                 count = exeNode(p->op.node[0], 0);
                 code_end_func(current_func);
             } else { /* declaration */
-                hash_init(var_local, HASHSIZE);
-                hash_init(var_local_SorA, HASHSIZE);
-                hash_init(var_local_GorP, HASHSIZE);
+                hash_freetable(var_local, HASHSIZE);
+                hash_freetable(var_local_SorA, HASHSIZE);
+                hash_freetable(var_local_GorP, HASHSIZE);
                 offset_local = 0;
                 in_func_declaration = 1;
                 /* in callee, [ebp] is the old ebp, [ebp+4] is the caller's addr

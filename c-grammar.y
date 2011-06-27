@@ -361,7 +361,9 @@ void yyerror(char *s)
 int main() 
 {
 
-    /*hash_init(var_local, HASHSIZE);*/
+    hash_init(var_local, HASHSIZE);
+    hash_init(var_local_SorA, HASHSIZE);
+    hash_init(var_local_GorP, HASHSIZE);
 
     yyparse();
 

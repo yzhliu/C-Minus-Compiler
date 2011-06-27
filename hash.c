@@ -48,6 +48,7 @@ void hash_freetable(HashNode *table[], int size)
     int i;
     for (i = 0; i < size; ++i) {
         hash_freenode(table[i]);
+        table[i] = NULL;
     }
 }
 
@@ -74,7 +75,7 @@ HashNode *hash_insert(HashNode *table[], int size, int hashvalue, int data)
     while (tmp->next != NULL) 
         tmp = tmp->next;
 
-    if ((tmp->next = malloc(sizeof(HashNode))) == NULL);
+    if ((tmp->next = malloc(sizeof(HashNode))) == NULL)
         return NULL;
     tmp->next->hash = hashvalue;
     tmp->next->data = data;
@@ -91,8 +92,9 @@ HashNode *hash_lookup(HashNode *table[], int size, int hashvalue)
     index = hashvalue % size;
     tmp = table[index];
 
-    if (tmp == NULL)
+    if (tmp == NULL) {
         return NULL;
+    }
 
     if (tmp->hash == hashvalue)
         return tmp;
