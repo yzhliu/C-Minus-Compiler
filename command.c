@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "command.h"
 #include "hash.h"
 
@@ -20,28 +21,30 @@ static int func_is_main(int funcname)
 
 static void getvarstr(char *varstr, int offset)
 {
-    if (offset > 0)
+    if (offset >= 0)
         sprintf(varstr, "[%s+%d]", EBP, offset);
     else
         sprintf(varstr, "[%s%d]", EBP, offset);
 }
 
-static void getregstr(char *regstr, int reg)
+static int getregstr(char *regstr, int reg)
 {
     switch (reg) {
     case 1:
         strcpy(regstr, EAX);
-        break;
+        return 0;
     case 2:
         strcpy(regstr, EBX);
-        break;
+        return 0;
     case 3:
         strcpy(regstr, ECX);
-        break;
+        return 0;
     case 4:
         strcpy(regstr, EDX);
-        break;
+        return 0;
     }
+
+    return -1;
 }
 
 int creat_label()
@@ -73,13 +76,18 @@ void code_pop(int reg)
 
 void code_lea_global(int target, int addr, int offset)
 {
+    int array;
+
     char offreg[REGSTR_LENGTH];
     char tarreg[REGSTR_LENGTH];
-    getregstr(offreg, offset);
+    array = getregstr(offreg, offset);
     getregstr(tarreg, target);
 
-    sprintf(strbucket, "%s\t%s, [%s%d+%s]", LEA, tarreg, GDATA_PRE, 
-            addr, offreg);
+    if (array == -1) { /* not array */
+        sprintf(strbucket, "%s\t%s, [%s%d]", LEA, tarreg, GDATA_PRE, addr);
+    } else { /* array with offset */
+        sprintf(strbucket, "%s\t%s, [%s%d+%s]", LEA, tarreg, GDATA_PRE, addr, offreg);
+    }
     output(strbucket);
 }
 
@@ -157,6 +165,12 @@ void code_push_global_var(int var, int offset)
     output(strbucket);
 }
 
+void code_push_global_array(int var)
+{
+    sprintf(strbucket, "%s\t%s %s%d", PUSH, VARSIZE, GDATA_PRE, var);
+    output(strbucket);
+}
+
 void code_call_func(int funcname)
 {
     sprintf(strbucket, "%s\t%s%d", CALLF, FUNC_PRE, funcname);
@@ -187,7 +201,7 @@ void code_start_text()
 
 void code_declare_global_var(int varname, int size)
 {
-    sprintf(strbucket, "%s%d:\t%s%d", GDATA_PRE, varname, 
+    sprintf(strbucket, "%s%d:\t%s %d", GDATA_PRE, varname, 
             GLOBAL_VAR_DEFINE, GLOBAL_VAR_LENGTH*size);
     output(strbucket);
 }
@@ -221,6 +235,8 @@ void code_end_func(int funcname)
 
     if (!func_is_main(funcname)) {
         output(RET);
+    } else {
+        code_end_main();
     }
 }
 
@@ -253,13 +269,17 @@ void code_op_assign(int target, int source)
     output(strbucket);
 }
 
-int code_get_array_offset(int baseoff, int idxreg, int varlength)
+int code_get_array_offset(int baseoff, int idxreg, int varlength, int global)
 {
     char regstr[REGSTR_LENGTH];
     getregstr(regstr, idxreg);
 
-    if (baseoff >= 0) { /* local var */
+    if (global == 0) { /* general local var */
         sprintf(strbucket, "%s\t%s, %s", MOV, EBX, EBP);
+        output(strbucket);
+    } else if (global == -1) { /* parameter */
+        /* the array position in memory */
+        sprintf(strbucket, "%s\t%s, [%s+%d]", MOV, EBX, EBP, baseoff);
         output(strbucket);
     } else { /* global var, just calculate the array index offset */
         sprintf(strbucket, "%s\t%s, 0", MOV, EBX);
@@ -273,10 +293,10 @@ int code_get_array_offset(int baseoff, int idxreg, int varlength)
     sprintf(strbucket, "%s\t%s, %s", ADD, EBX, EAX);
     output(strbucket);
 
-    if (baseoff >= 0) {
-        sprintf(strbucket, "%s\t%s, %d", SUB, EBX, baseoff);
+    if (global == 0) {
+        sprintf(strbucket, "%s\t%s, %d", SUB, EBX, abs(baseoff));
         output(strbucket);
-    }
+    } 
 
     return 2; /* store in ebx */
 }
@@ -340,17 +360,47 @@ int code_op_binary(int v1, int v2, char *op)
     return 1; /* return which reg it stores the result */
 }
 
-void code_end_all()
+int code_data_section()
 {
-    sprintf(strbucket, "mov eax,1\nmov ebx,0\nint 80h");
+    static int data_mark = 0;
+
+    if (!data_mark) {
+        strcpy(strbucket, "section .data");
+        output(strbucket);
+        strcpy(strbucket, "numbers db \"0123456789\", 0xA");
+        output(strbucket);
+        
+        ++data_mark;
+        return 0;
+    }
+
+    return data_mark;
+}
+
+/* output function */
+void code_func_output()
+{
+    /*code_start_func();*/
+    strcpy(strbucket, "sub esp, 4\nmov dword [ebp-4], 0\njmp G2\nG1:\nadd dword [ebp-4], 1\npush edx");
+    output(strbucket);
+    strcpy(strbucket, "G2:\nmov edx, 0\nmov eax, [ebp+8]\nmov ebx, 10\ndiv ebx\nmov [ebp+8], eax");
+    output(strbucket);
+    strcpy(strbucket, "cmp eax, 0\njnz G1\npush edx\nadd dword [ebp-4], 1\njmp G3");
+    output(strbucket);
+    strcpy(strbucket, "G4:\nsub dword [ebp-4], 1\npop edx\nmov eax, 4\nmov ebx, 1\nmov ecx, numbers");
+    output(strbucket);
+    strcpy(strbucket, "add ecx, edx\nmov edx, 1\nint 80h");
+    output(strbucket);
+    strcpy(strbucket, "G3:\ncmp dword [ebp-4], 0\njnz G4\nmov eax, 4\nmov ebx, 1\nlea ecx, [numbers+10]");
+    output(strbucket);
+    strcpy(strbucket, "mov edx, 1\nint 80h");
     output(strbucket);
 }
 
-void code_output()
+
+static void code_end_main()
 {
-    sprintf(strbucket, "\npush dword [ebp-12]\npop eax\nadd eax, 48\nmov [ebp-12], eax\n" \
-                "MOV eax, 4\nMOV ebx, 1\n" \ 
-                "lea ecx, [ebp-12]\nMOV edx, 1\nINT 80h\n");
+    sprintf(strbucket, "mov ebx, eax\nmov eax,1\nint 80h");
     output(strbucket);
 }
 

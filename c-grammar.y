@@ -87,7 +87,7 @@ var_declaration
             tmp1 = set_index($2);
             $$ = opr(VAR, 2, $1, tmp1);
         }
-    | type_specifier IDENTIFIER '[' CONSTANT ']'
+    | type_specifier IDENTIFIER '[' CONSTANT ']' ';'
         {
             Node *tmp1, *tmp2;
             tmp1 = set_index($2);

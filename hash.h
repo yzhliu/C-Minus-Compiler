@@ -1,6 +1,8 @@
 #ifndef HASH_H
 #define HASH_H
 
+#define DATASIZE 3
+
 typedef struct HashNodeTag {
     int hash;
     int data;
