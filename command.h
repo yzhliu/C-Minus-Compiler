@@ -81,6 +81,7 @@ int code_op_binary(int v1, int v2, char *op);
 
 int code_data_section();
 void code_func_output();
+void code_func_input();
 static void code_end_main();
 
 #endif

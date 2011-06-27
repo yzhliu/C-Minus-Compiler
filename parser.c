@@ -119,9 +119,15 @@ int exeNode(Node *p, int signal)
             retvalue = code_data_section();
             if (!retvalue) { /* start text section */
                 code_start_text();
+                /* output function */
                 current_func = ELFHash(FUNC_OUTPUT_NAME, strlen(FUNC_OUTPUT_NAME));
                 code_start_func(current_func);
                 code_func_output();
+                code_end_func(current_func);
+                /* input function */
+                current_func = ELFHash(FUNC_INPUT_NAME, strlen(FUNC_INPUT_NAME));
+                code_start_func(current_func);
+                code_func_input();
                 code_end_func(current_func);
             }
 

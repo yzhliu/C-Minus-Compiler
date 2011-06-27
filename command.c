@@ -369,6 +369,8 @@ int code_data_section()
         output(strbucket);
         strcpy(strbucket, "numbers db \"0123456789\", 0xA");
         output(strbucket);
+        strcpy(strbucket, "inputchar db 0");
+        output(strbucket);
         
         ++data_mark;
         return 0;
@@ -394,6 +396,21 @@ void code_func_output()
     strcpy(strbucket, "G3:\ncmp dword [ebp-4], 0\njnz G4\nmov eax, 4\nmov ebx, 1\nlea ecx, [numbers+10]");
     output(strbucket);
     strcpy(strbucket, "mov edx, 1\nint 80h");
+    output(strbucket);
+}
+
+/* input function */
+void code_func_input()
+{
+    strcpy(strbucket, "sub esp, 4\nmov dword [ebp-4], 0\nmov byte [inputchar], 0\njmp G6");
+    output(strbucket);
+    strcpy(strbucket, "G5:\nmov dword eax, [ebp-4]\nmov ebx, 10\nmul ebx\nxor ecx, ecx");
+    output(strbucket);
+    strcpy(strbucket, "mov byte cl, [inputchar]\nsub ecx, 48\nadd eax, ecx\nmov dword [ebp-4], eax");
+    output(strbucket);
+    strcpy(strbucket, "G6:\nmov eax, 03h\nmov ebx, 00h\nmov ecx, inputchar\nmov edx, 01h");
+    output(strbucket);
+    strcpy(strbucket, "int 80h\ncmp byte [inputchar], 0ah\njne G5\nmov dword eax, [ebp-4]");
     output(strbucket);
 }
 

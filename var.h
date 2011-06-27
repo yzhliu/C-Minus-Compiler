@@ -10,6 +10,7 @@
 #define PARAMETER 2
 
 #define FUNC_OUTPUT_NAME "output"
+#define FUNC_INPUT_NAME "input"
 
 HashNode *var_local[HASHSIZE];
 HashNode *var_local_SorA[HASHSIZE]; /* whether it is scalar or array */

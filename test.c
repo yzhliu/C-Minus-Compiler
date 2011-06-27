@@ -9,7 +9,8 @@ int gcd(int u, int v)
 int main(void)
 {
     int x; int y;
-    x = 100; y = 50;
+    x = input();
+    y = input();
     output(gcd(x, y));
 
     return 0;
