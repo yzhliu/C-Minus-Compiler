@@ -32,83 +32,82 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-
 /* Tokens.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
-   enum yytokentype {
-     CONSTANT = 258,
-     INT = 259,
-     VOID = 260,
-     IDENTIFIER = 261,
-     STRING_LITERAL = 262,
-     SIZEOF = 263,
-     PTR_OP = 264,
-     INC_OP = 265,
-     DEC_OP = 266,
-     LEFT_OP = 267,
-     RIGHT_OP = 268,
-     LE_OP = 269,
-     GE_OP = 270,
-     EQ_OP = 271,
-     NE_OP = 272,
-     AND_OP = 273,
-     OR_OP = 274,
-     MUL_ASSIGN = 275,
-     DIV_ASSIGN = 276,
-     MOD_ASSIGN = 277,
-     ADD_ASSIGN = 278,
-     SUB_ASSIGN = 279,
-     LEFT_ASSIGN = 280,
-     RIGHT_ASSIGN = 281,
-     AND_ASSIGN = 282,
-     XOR_ASSIGN = 283,
-     OR_ASSIGN = 284,
-     TYPE_NAME = 285,
-     TYPEDEF = 286,
-     EXTERN = 287,
-     STATIC = 288,
-     AUTO = 289,
-     REGISTER = 290,
-     INLINE = 291,
-     RESTRICT = 292,
-     CHAR = 293,
-     SHORT = 294,
-     LONG = 295,
-     SIGNED = 296,
-     UNSIGNED = 297,
-     FLOAT = 298,
-     DOUBLE = 299,
-     CONST = 300,
-     VOLATILE = 301,
-     BOOL = 302,
-     COMPLEX = 303,
-     IMAGINARY = 304,
-     STRUCT = 305,
-     UNION = 306,
-     ENUM = 307,
-     ELLIPSIS = 308,
-     CASE = 309,
-     DEFAULT = 310,
-     IF = 311,
-     ELSE = 312,
-     SWITCH = 313,
-     WHILE = 314,
-     DO = 315,
-     FOR = 316,
-     GOTO = 317,
-     CONTINUE = 318,
-     BREAK = 319,
-     RETURN = 320,
-     PARAM = 321,
-     FUNC = 322,
-     VAR = 323,
-     CALL = 324,
-     GLOBAL_VAR = 325,
-     LOWER_THAN_ELSE = 326
-   };
+enum yytokentype {
+	CONSTANT = 258,
+	INT = 259,
+	VOID = 260,
+	IDENTIFIER = 261,
+	STRING_LITERAL = 262,
+	SIZEOF = 263,
+	PTR_OP = 264,
+	INC_OP = 265,
+	DEC_OP = 266,
+	LEFT_OP = 267,
+	RIGHT_OP = 268,
+	LE_OP = 269,
+	GE_OP = 270,
+	EQ_OP = 271,
+	NE_OP = 272,
+	AND_OP = 273,
+	OR_OP = 274,
+	MUL_ASSIGN = 275,
+	DIV_ASSIGN = 276,
+	MOD_ASSIGN = 277,
+	ADD_ASSIGN = 278,
+	SUB_ASSIGN = 279,
+	LEFT_ASSIGN = 280,
+	RIGHT_ASSIGN = 281,
+	AND_ASSIGN = 282,
+	XOR_ASSIGN = 283,
+	OR_ASSIGN = 284,
+	TYPE_NAME = 285,
+	TYPEDEF = 286,
+	EXTERN = 287,
+	STATIC = 288,
+	AUTO = 289,
+	REGISTER = 290,
+	INLINE = 291,
+	RESTRICT = 292,
+	CHAR = 293,
+	SHORT = 294,
+	LONG = 295,
+	SIGNED = 296,
+	UNSIGNED = 297,
+	FLOAT = 298,
+	DOUBLE = 299,
+	CONST = 300,
+	VOLATILE = 301,
+	BOOL = 302,
+	COMPLEX = 303,
+	IMAGINARY = 304,
+	STRUCT = 305,
+	UNION = 306,
+	ENUM = 307,
+	ELLIPSIS = 308,
+	CASE = 309,
+	DEFAULT = 310,
+	IF = 311,
+	ELSE = 312,
+	SWITCH = 313,
+	WHILE = 314,
+	DO = 315,
+	FOR = 316,
+	GOTO = 317,
+	CONTINUE = 318,
+	BREAK = 319,
+	RETURN = 320,
+	PARAM = 321,
+	FUNC = 322,
+	VAR = 323,
+	CALL = 324,
+	GLOBAL_VAR = 325,
+	LOWER_THAN_ELSE = 326
+};
 #endif
 /* Tokens.  */
 #define CONSTANT 258
@@ -181,30 +180,22 @@
 #define GLOBAL_VAR 325
 #define LOWER_THAN_ELSE 326
 
-
-
-
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-{
+typedef union YYSTYPE {
 
 /* Line 1676 of yacc.c  */
 #line 26 "c-grammar.y"
 
-    int iValue;
-    int sIndex;
-    Node *nPtr;
-
-
+	int iValue;
+	int sIndex;
+	Node *nPtr;
 
 /* Line 1676 of yacc.c  */
 #line 202 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
+# define yystype YYSTYPE	/* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
 extern YYSTYPE yylval;
-
-

@@ -13,8 +13,8 @@
 #define FUNC_INPUT_NAME "input"
 
 HashNode *var_local[HASHSIZE];
-HashNode *var_local_SorA[HASHSIZE]; /* whether it is scalar or array */
-HashNode *var_local_GorP[HASHSIZE]; /* general local or param */
-HashNode *var_global_SorA[HASHSIZE]; /* general local or param */
+HashNode *var_local_SorA[HASHSIZE];	/* whether it is scalar or array */
+HashNode *var_local_GorP[HASHSIZE];	/* general local or param */
+HashNode *var_global_SorA[HASHSIZE];	/* general local or param */
 
 #endif

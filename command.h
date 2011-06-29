@@ -38,8 +38,8 @@
 #define VARSIZE "dword"
 #define GLOBAL_VAR_LENGTH 2
 #define GLOBAL_VAR_DEFINE "resw"
-#define VARSTR_LENGTH 20 /* for [ebp-4] ... */
-#define REGSTR_LENGTH 4 
+#define VARSTR_LENGTH 20	/* for [ebp-4] ... */
+#define REGSTR_LENGTH 4
 
 #define MAX_STR_LENGTH 300
 
