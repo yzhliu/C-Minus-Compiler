@@ -162,7 +162,7 @@ int exeNode(Node * p, int signal)
 				/* the local variables */ 
 				count = exeNode(p->op.node[2], 0);
 			}
-			return count;
+			return 1;
 		case PARAM:
 			
 			/*++param_count; */ 
@@ -193,7 +193,7 @@ int exeNode(Node * p, int signal)
 			if (signal) {	/* as right operand */
 				code_push_ind(p->op.node[0]->index);
 			}
-			return count;
+			return 1;
 		case '<':
 			strcpy(binary_op_str, "<");
 			goto op_binary;
@@ -231,7 +231,7 @@ int exeNode(Node * p, int signal)
 			retvalue = code_op_binary(1, 2, binary_op_str);
 			if (signal)
 				code_push_reg(retvalue, 0);
-			return count;
+			return 1;
 		case '[':	/* array */
 			count = exeNode(p->op.node[1], 1);
 			
@@ -320,7 +320,7 @@ int exeNode(Node * p, int signal)
 			count += exeNode(p->op.node[0], 1);
 			code_pop(1);
 			code_test_condition(1, 1, label[1]);
-			return count;
+			return 0;
 		case IF:
 			label[0] = creat_label();
 			
@@ -342,7 +342,7 @@ int exeNode(Node * p, int signal)
 				count += exeNode(p->op.node[2], 0);
 				code_label(label[1]);
 			}
-			return count;
+			return 0;
 		case RETURN:
 			if (p->op.num > 0)
 				count = exeNode(p->op.node[0], 1);
@@ -351,7 +351,7 @@ int exeNode(Node * p, int signal)
 			/* FIXME: there may be two "leave & ret" 
 			 * since it is also called when function ends */ 
 			code_end_func(current_func);
-			return count;
+			return 0;
 		}
 	}
 	return 0;
