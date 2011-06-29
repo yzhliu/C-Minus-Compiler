@@ -47,7 +47,6 @@
 #define GDATA_PRE "D_"
 
 char strbucket[MAX_STR_LENGTH];
-//char var_type_str[5][5] = { "", "byte", "word", "", "dword" };
 
 void output(const char *str);
 static int func_is_main(int funcname);

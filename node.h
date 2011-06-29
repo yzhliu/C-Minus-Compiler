@@ -1,23 +1,23 @@
 #ifndef NODE_H
 #define NODE_H
 
-/* ¶¨ÒåÊ÷½áµãµÄÈ¨¾ÙÀàĞÍ */
+/* å®šä¹‰æ ‘ç»“ç‚¹çš„æƒä¸¾ç±»å‹ */
 typedef enum { TYPE_CONTENT, TYPE_INDEX, TYPE_OP } NodeEnum;
 
-/* ²Ù×÷·û */
+/* æ“ä½œç¬¦ */
 typedef struct {
-	int name; /* ²Ù×÷·ûÃû³Æ */
-	int num; /* ²Ù×÷Ôª¸öÊı */
-	struct NodeTag * node[1]; /* ²Ù×÷ÔªµØÖ· ¿ÉÀ©Õ¹ */
+	int name; /* æ“ä½œç¬¦åç§° */
+	int num; /* æ“ä½œå…ƒä¸ªæ•° */
+	struct NodeTag * node[1]; /* æ“ä½œå…ƒåœ°å€ å¯æ‰©å±• */
 } OpNode;
   
 typedef struct NodeTag {
-	NodeEnum type; /* Ê÷½áµãÀàĞÍ */
-	/* Union ±ØĞëÊÇ×îºóÒ»¸ö³ÉÔ± */
+	NodeEnum type; /* æ ‘ç»“ç‚¹ç±»å‹ */
+	/* Union å¿…é¡»æ˜¯æœ€åä¸€ä¸ªæˆå‘˜ */
 	union {
-		int content; /* ÄÚÈİ */
-		int index; /* Ë÷Òı */
-		OpNode op; /* ²Ù×÷·û¶ÔÏó */
+		int content; /* å†…å®¹ */
+		int index; /* ç´¢å¼• */
+		OpNode op; /* æ“ä½œç¬¦å¯¹è±¡ */
 	};
 } Node;
 

@@ -163,12 +163,6 @@ void count(void)
 			column++;
 
 	/*ECHO; */
-    /*
-    yylval = malloc(sizeof(yytree));
-    yylval->text = strdup(yytext);
-    yylval->next = yylval->child = NULL;
-    yylval->mark = MARK_NONE;
-    */
 }
 
 
@@ -186,8 +180,6 @@ int check_type(void)
 /*
 *	it actually will only return IDENTIFIER
 */
-    /*yylval.sIndex = *yytext - 'a';*/
-    /*yylval.sIndex = *yytext;*/
     yylval.sIndex = ELFHash(yytext, strlen(yytext));
 
 	return IDENTIFIER;

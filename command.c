@@ -7,8 +7,6 @@
 void output(const char *str)
 {
     printf("%s\n", str);
-    /*fputs(str, block_fp);*/
-    /*fputs("\n", block_fp);*/
 }
 
 static int func_is_main(int funcname)
@@ -229,7 +227,6 @@ void code_clean_stack(int height)
 
 void code_end_func(int funcname)
 {
-    //code_output();
     sprintf(strbucket, "%s", LEAVE);
     output(LEAVE);
 

@@ -74,7 +74,6 @@ declaration
     : var_declaration 
         { 
             $$  = opr(GLOBAL_VAR, 1, $1);
-            /*$$ = $1; */
         }
     | fun_declaration { $$ = $1; }
     ;
@@ -106,7 +105,6 @@ fun_declaration
         {
             Node *tmp1;
             tmp1 = set_index($2);
-            /*printf("char: %c\n", $2);*/
             $$ = opr(FUNC, 3, $1, tmp1, $4);
         }
 
@@ -205,7 +203,6 @@ var
 simple_expression
     : additive_expression relop additive_expression
         {
-            //printf("simp relop\n");  // 1 > 3
             $$ = opr($2, 2, $1, $3); 
         }
     | additive_expression { $$ = $1; }
@@ -228,12 +225,6 @@ additive_expression
     | term
         { 
             $$ = $1;
-            /*
-            tmp = $1;
-            printf("1 term reduce to addi %d\n", tmp->op.node[0]->content); 
-            printf("2 term reduce to addi %d\n", tmp->op.node[1]->content); 
-            printf("1 term reduce to addi %c\n", tmp->op.name); 
-            */
         }
     ;
 
@@ -245,7 +236,6 @@ addop
 term
     : term mulop factor
         {
-            //printf("term reduce\n"); 
             $$ = opr($2, 2, $1, $3);
         }
     | factor { $$ = $1; }
